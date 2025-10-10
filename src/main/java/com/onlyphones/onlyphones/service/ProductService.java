@@ -20,8 +20,34 @@ public class ProductService {
         return (List<Product>) productRepository.findAll();
     }
 
+    public Product getProductById(String id) {
+        return productRepository.findById(id).orElse(null);
+    }
+
     public Product createProduct(Product product) {
         return productRepository.save(product);
+    }
+
+    public Product updateProduct(String id, Product newData) {
+        return productRepository.findById(id)
+                .map(existing -> {
+                    existing.setCategory(newData.getCategory());
+                    existing.setCapacity(newData.getCapacity());
+                    existing.setColor(newData.getColor());
+                    existing.setModel(newData.getModel());
+                    existing.setPrice(newData.getPrice());
+                    existing.setDiscount(newData.getDiscount());
+                    return productRepository.save(existing);
+                }).orElse(null);
+    }
+
+    public boolean deleteProduct(String id) {
+        if (productRepository.existsById(id)) {
+            productRepository.deleteById(id);
+            return true;
+        }
+
+        return false;
     }
 
 }
