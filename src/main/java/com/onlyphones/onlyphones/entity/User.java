@@ -2,6 +2,7 @@ package com.onlyphones.onlyphones.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Table(name = "users")
@@ -9,26 +10,26 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
+@ToString@FieldDefaults(level = AccessLevel.PRIVATE)
 
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_user")
-    private String idUser;
+    String idUser;
 
     @Column(name = "name")
-    private String name;
+    String name;
 
     @Column(name = "email")
-    private String email;
+    String email;
 
     @Column(name = "password")
-    private String password;
+    String password;
 
     @ManyToOne
     @JoinColumn(name = "user_rol")
-    private Rol userRol;
+    Rol userRol;
 
 }

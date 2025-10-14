@@ -2,6 +2,7 @@ package com.onlyphones.onlyphones.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Entity
 @Table(name = "rol")
@@ -10,14 +11,15 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
+@FieldDefaults(level = AccessLevel.PRIVATE)
 
 public class Rol {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_rol", nullable = false)
-    private String idRol;
+    String idRol;
 
     @Column(name = "rol", nullable = false)
-    private String rol;
+    String rol;
 }

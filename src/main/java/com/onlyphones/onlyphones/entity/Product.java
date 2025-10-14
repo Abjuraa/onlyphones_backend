@@ -2,6 +2,8 @@ package com.onlyphones.onlyphones.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.math.BigDecimal;
 
@@ -12,33 +14,33 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @ToString
-
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_product")
-    private String idProduct;
+    String idProduct;
 
     @Column(name = "category")
-    private String category;
+    String category;
 
     @Column(name = "model")
-    private String model;
+    String model;
 
     @Column(name = "capacity")
-    private String capacity;
+    String capacity;
 
     @Column(name = "color")
-    private String color;
+    String color;
 
     @Column(name = "price")
-    private BigDecimal price;
+    BigDecimal price;
 
     @Column(name = "discount")
-    private Integer discount;
+    Integer discount;
 
     @Column(name = "has_discount")
-    private Boolean hasDiscount;
+    Boolean hasDiscount;
 
 }

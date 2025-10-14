@@ -54,8 +54,10 @@ public class UserService {
                     user.setEmail(newData.getEmail());
                     user.setName(newData.getName());
                     user.setPassword(newData.getPassword());
-                    return userRepository.save(user);
-                }).orElse(null);
+                    return user;
+                })
+                .map(userRepository::save)
+                .orElseThrow(() -> new RuntimeException("No se pudo actualizar el usuario"));
     }
 
     public Boolean deleteUser(String id) {

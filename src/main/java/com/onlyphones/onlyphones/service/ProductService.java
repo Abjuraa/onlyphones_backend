@@ -37,8 +37,10 @@ public class ProductService {
                     existing.setModel(newData.getModel());
                     existing.setPrice(newData.getPrice());
                     existing.setDiscount(newData.getDiscount());
-                    return productRepository.save(existing);
-                }).orElse(null);
+                    return existing;
+                })
+                .map(productRepository::save)
+                .orElseThrow(() -> new RuntimeException("producto no encontrado"));
     }
 
     public boolean deleteProduct(String id) {
