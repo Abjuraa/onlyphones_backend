@@ -4,8 +4,6 @@ import com.onlyphones.onlyphones.entity.Product;
 import com.onlyphones.onlyphones.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,8 +16,7 @@ import java.util.List;
 
 public class ProductController {
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
 
     @GetMapping("/getallproducts")
     public ResponseEntity<List<Product>> getAllProducts(){
@@ -46,13 +43,19 @@ public class ProductController {
 
     @PostMapping("/createproduct")
     public ResponseEntity<?> createProduct(@RequestBody Product product) {
-        Product response = productService.createProduct(product);
 
-        if (response == null) {
-            ResponseEntity.badRequest().body("No se pudo crear el producto");
+        try {
+            Product response = productService.createProduct(product);
+
+            if (response == null) {
+                ResponseEntity.badRequest().body("No se pudo crear el producto");
+            }
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return  ResponseEntity.status(500).body("Error interno al crear el producto");
         }
 
-        return ResponseEntity.ok(response);
     }
 
     @PutMapping("updateproduct/{id}")

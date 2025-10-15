@@ -1,0 +1,71 @@
+package com.onlyphones.onlyphones.controller;
+
+import com.onlyphones.onlyphones.entity.Category;
+import com.onlyphones.onlyphones.service.CategoryService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/category")
+
+public class CategoryController {
+
+    private final CategoryService categoryService;
+
+    @GetMapping("/getallcategories")
+    public ResponseEntity<?> getAllCategories() {
+        List<Category> response = categoryService.getAllCategories();
+
+        if (response.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("getcategory/{id}")
+    public ResponseEntity<?> getCategoryById(@PathVariable String id) {
+        Category response = categoryService.getCategoryById(id);
+
+        if (response == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/createcategory")
+    public ResponseEntity<Category> createProduct(@RequestBody Category newCategory) {
+        Category response = categoryService.createCategory(newCategory);
+        if (response == null) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/updatecategory/{id}")
+    public ResponseEntity<Category> updateCategory(@PathVariable String id, @RequestBody Category editCategory) {
+        Category response = categoryService.updateCategory(id, editCategory);
+
+        if (response == null) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("deletecategory/{id}")
+    public ResponseEntity<?> deleteCategory(@PathVariable String id) {
+        boolean response = categoryService.deleteCategory(id);
+
+        if(response) {
+            return ResponseEntity.ok(id);
+        }
+        return ResponseEntity.notFound().build();
+
+    }
+}

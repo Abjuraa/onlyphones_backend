@@ -18,14 +18,9 @@ import java.util.Optional;
 
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private RolRepository rolRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final RolRepository rolRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public List<User> getAllUsers() {
         return (List<User>) userRepository.findAll();
@@ -36,7 +31,6 @@ public class UserService {
     }
 
     public User createUser(User newUser) {
-
         Optional<User> existingUser = userRepository.findByEmail(newUser.getEmail());
         Rol defaultRol = rolRepository.findByRol("Client").orElseThrow(() -> new RuntimeException("El rol no se encuentra disponible"));
 
@@ -65,7 +59,6 @@ public class UserService {
             userRepository.deleteById(id);
             return true;
         }
-
         return false;
     }
 }

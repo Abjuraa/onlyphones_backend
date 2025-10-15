@@ -1,7 +1,6 @@
 package com.onlyphones.onlyphones.security;
 
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +11,7 @@ import java.util.Date;
 
 public class JwtUtils {
 
-    private static final long EXPIRTAION_TIME = 1000*60*60;
+    private static final long EXPIRATION_TIME = 1000*60*60;
 
     private final Key SECRETKEY = Keys.hmacShaKeyFor("constrasenasupersecretadetodalavida".getBytes());
 
@@ -26,7 +25,7 @@ public class JwtUtils {
                 //fecha de creacion
                 .setIssuedAt(new Date())
                 //fecha de vencimiento
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRTAION_TIME))
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 //firma del token
                 .signWith(SECRETKEY)
                 //Genera el token

@@ -22,8 +22,9 @@ public class Product {
     @Column(name = "id_product")
     String idProduct;
 
-    @Column(name = "category")
-    String category;
+    @ManyToOne
+    @JoinColumn(name = "id_category")
+    Category category;
 
     @Column(name = "model")
     String model;

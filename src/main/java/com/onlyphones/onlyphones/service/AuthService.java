@@ -3,10 +3,10 @@ package com.onlyphones.onlyphones.service;
 import com.onlyphones.onlyphones.dto.LoginRequest;
 import com.onlyphones.onlyphones.dto.LoginResponse;
 import com.onlyphones.onlyphones.entity.User;
+import com.onlyphones.onlyphones.exceptions.AuthException;
 import com.onlyphones.onlyphones.repository.UserRepository;
 import com.onlyphones.onlyphones.security.JwtUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,22 +15,17 @@ import org.springframework.stereotype.Service;
 
 public class AuthService {
 
-    @Autowired
-    private UserRepository userRepository;
 
-    @Autowired
-    private JwtUtils jwtUtils;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final JwtUtils jwtUtils;
+    private final PasswordEncoder passwordEncoder;
 
     public LoginResponse login(LoginRequest request) {
-
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new AuthException("Credenciales invalidas"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Las contraseñas no coinciden");
+            throw new AuthException("Credenciales invalidas");
         }
 
         String token = jwtUtils.generateToken(user.getEmail(), user.getUserRol().getRol());
