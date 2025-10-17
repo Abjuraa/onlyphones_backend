@@ -29,7 +29,6 @@ public class CategoryService {
         if (existingCategory.isPresent()) {
             throw new RuntimeException("Categoria ya existente");
         }
-
         return categoryRepository.save(newCategory);
     }
 

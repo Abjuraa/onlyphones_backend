@@ -1,4 +1,4 @@
-package com.onlyphones.onlyphones.controller;
+package com.onlyphones.onlyphones.controller.admin;
 
 import com.onlyphones.onlyphones.entity.Product;
 import com.onlyphones.onlyphones.service.ProductService;
@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/api/admin")
 @RequiredArgsConstructor
 @Slf4j
 
-public class ProductController {
+public class AdminProductController {
 
     private final ProductService productService;
 
-    @GetMapping("/getallproducts")
+    @GetMapping("/product")
     public ResponseEntity<List<Product>> getAllProducts(){
         List<Product> response = productService.getProducts();
 
@@ -29,7 +29,7 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("getproductbyid/{id}")
+    @GetMapping("/product/{id}")
     public ResponseEntity<?> getProductById(@PathVariable String id) {
         Product response = productService.getProductById(id);
 
@@ -43,22 +43,19 @@ public class ProductController {
 
     @PostMapping("/createproduct")
     public ResponseEntity<?> createProduct(@RequestBody Product product) {
-
-        try {
+        try{
             Product response = productService.createProduct(product);
 
             if (response == null) {
-                ResponseEntity.badRequest().body("No se pudo crear el producto");
+                throw new RuntimeException("No se puede crear el producto");
             }
-
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return  ResponseEntity.status(500).body("Error interno al crear el producto");
+            return ResponseEntity.status(500).body("Error al intentar crear el producto");
         }
-
     }
 
-    @PutMapping("updateproduct/{id}")
+    @PutMapping("/updateproduct/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable String id, @RequestBody Product newData) {
         Product response = productService.updateProduct(id, newData);
 
@@ -69,7 +66,7 @@ public class ProductController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("deleteproduct/{id}")
+    @DeleteMapping("/deleteproduct/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable String id) {
         boolean response = productService.deleteProduct(id);
 

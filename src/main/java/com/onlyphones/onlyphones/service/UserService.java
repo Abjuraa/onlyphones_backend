@@ -5,6 +5,7 @@ import com.onlyphones.onlyphones.entity.User;
 import com.onlyphones.onlyphones.repository.RolRepository;
 import com.onlyphones.onlyphones.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 
@@ -28,18 +30,6 @@ public class UserService {
 
     public User getUserById(String id) {
         return userRepository.findById(id).orElse(null);
-    }
-
-    public User createUser(User newUser) {
-        Optional<User> existingUser = userRepository.findByEmail(newUser.getEmail());
-        Rol defaultRol = rolRepository.findByRol("Client").orElseThrow(() -> new RuntimeException("El rol no se encuentra disponible"));
-
-        if (existingUser.isPresent()) {
-            throw new RuntimeException("Ya hay un usuario registrado con el correo ingresado");
-        }
-        newUser.setUserRol(defaultRol);
-        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-        return userRepository.save(newUser);
     }
 
     public User updateUser(String id, User newData) {

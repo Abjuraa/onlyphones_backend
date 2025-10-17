@@ -27,7 +27,7 @@ public class Category {
     @Column(name = "name")
     String nameCategory;
 
-    @OneToMany
-    List<Product> products = new ArrayList<>();
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Product> products = new ArrayList<>();
 
 }

@@ -3,9 +3,9 @@ package com.onlyphones.onlyphones.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.boot.context.properties.bind.DefaultValue;
-
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "product")
@@ -21,10 +21,6 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id_product")
     String idProduct;
-
-    @ManyToOne
-    @JoinColumn(name = "id_category")
-    Category category;
 
     @Column(name = "model")
     String model;
@@ -44,4 +40,7 @@ public class Product {
     @Column(name = "has_discount")
     Boolean hasDiscount;
 
+    @ManyToOne
+    @JoinColumn(name = "id_category")
+    Category category;
 }

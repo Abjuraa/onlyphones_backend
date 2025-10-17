@@ -1,20 +1,22 @@
 package com.onlyphones.onlyphones.service;
 
 import com.onlyphones.onlyphones.entity.Product;
+import com.onlyphones.onlyphones.repository.CategoryRepository;
 import com.onlyphones.onlyphones.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 
 public class ProductService {
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
     public List<Product> getProducts() {
         return (List<Product>) productRepository.findAll();

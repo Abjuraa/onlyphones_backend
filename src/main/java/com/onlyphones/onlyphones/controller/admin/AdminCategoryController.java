@@ -1,4 +1,4 @@
-package com.onlyphones.onlyphones.controller;
+package com.onlyphones.onlyphones.controller.admin;
 
 import com.onlyphones.onlyphones.entity.Category;
 import com.onlyphones.onlyphones.service.CategoryService;
@@ -10,13 +10,13 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/category")
+@RequestMapping("/api/admin")
 
-public class CategoryController {
+public class AdminCategoryController {
 
     private final CategoryService categoryService;
 
-    @GetMapping("/getallcategories")
+    @GetMapping("/category")
     public ResponseEntity<?> getAllCategories() {
         List<Category> response = categoryService.getAllCategories();
 
@@ -27,7 +27,7 @@ public class CategoryController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("getcategory/{id}")
+    @GetMapping("/category/{id}")
     public ResponseEntity<?> getCategoryById(@PathVariable String id) {
         Category response = categoryService.getCategoryById(id);
 
@@ -58,7 +58,7 @@ public class CategoryController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("deletecategory/{id}")
+    @DeleteMapping("/deletecategory/{id}")
     public ResponseEntity<?> deleteCategory(@PathVariable String id) {
         boolean response = categoryService.deleteCategory(id);
 

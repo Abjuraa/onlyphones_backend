@@ -1,12 +1,16 @@
 package com.onlyphones.onlyphones.service;
 
 import com.onlyphones.onlyphones.dto.LoginRequest;
-import com.onlyphones.onlyphones.dto.LoginResponse;
+import com.onlyphones.onlyphones.dto.AuthResponse;
+import com.onlyphones.onlyphones.dto.RegisterRequest;
+import com.onlyphones.onlyphones.entity.Rol;
 import com.onlyphones.onlyphones.entity.User;
 import com.onlyphones.onlyphones.exceptions.AuthException;
+import com.onlyphones.onlyphones.repository.RolRepository;
 import com.onlyphones.onlyphones.repository.UserRepository;
 import com.onlyphones.onlyphones.security.JwtUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +23,9 @@ public class AuthService {
     private final UserRepository userRepository;
     private final JwtUtils jwtUtils;
     private final PasswordEncoder passwordEncoder;
+    private final RolRepository rolRepository;
 
-    public LoginResponse login(LoginRequest request) {
+    public AuthResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new AuthException("Credenciales invalidas"));
 
@@ -29,7 +34,29 @@ public class AuthService {
         }
 
         String token = jwtUtils.generateToken(user.getEmail(), user.getUserRol().getRol());
-        return new LoginResponse(token, "inicio de sesion correcto");
+        return new AuthResponse(token, "inicio de sesion correcto");
     }
+
+    public AuthResponse register(RegisterRequest request) {
+        Rol rol = rolRepository.findByRol("Client").orElseThrow(() -> new RuntimeException("No se encontro el rol"));
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+             throw new RuntimeException("Usuario con correo ya registrado");
+        }
+
+        User newUser = new User();
+        newUser.setName(request.getName());
+        newUser.setEmail(request.getEmail());
+        newUser.setPassword(passwordEncoder.encode(request.getPassword()));
+        newUser.setUserRol(rol);
+
+        userRepository.save(newUser);
+
+        String token = jwtUtils.generateToken(newUser.getEmail(), newUser.getUserRol().getRol());
+
+        return new AuthResponse(token, "Usuario creado correctamente");
     }
+
+    }
+
+
 

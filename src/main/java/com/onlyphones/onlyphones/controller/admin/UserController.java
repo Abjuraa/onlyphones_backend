@@ -1,26 +1,24 @@
-package com.onlyphones.onlyphones.controller;
+package com.onlyphones.onlyphones.controller.admin;
 
 import com.onlyphones.onlyphones.entity.User;
 import com.onlyphones.onlyphones.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("user")
+@RequestMapping("/api/user")
 
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @GetMapping("/")
+    @GetMapping("/user")
     public ResponseEntity<?> getAllUsers() {
         List<User> response = userService.getAllUsers();
 
@@ -30,7 +28,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/user/{id}")
     public ResponseEntity<?> getUserById(String id) {
         User response = userService.getUserById(id);
 
@@ -38,16 +36,6 @@ public class UserController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("/createuser")
-    public ResponseEntity<?> createUser(@RequestBody User newUser) {
-        User response = userService.createUser(newUser);
-
-        if (response == null) {
-           return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok().body(response);
     }
 
     @PutMapping("/edituser/{id}")
@@ -62,7 +50,7 @@ public class UserController {
 
     }
 
-    @DeleteMapping("deleteuser/{id}")
+    @DeleteMapping("/deleteuser/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable String id) {
         boolean response = userService.deleteUser(id);
 
