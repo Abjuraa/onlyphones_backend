@@ -25,6 +25,9 @@ public class Product {
     @Column(name = "model")
     String model;
 
+    @Column(name = "image")
+    String image;
+
     @Column(name = "capacity")
     String capacity;
 

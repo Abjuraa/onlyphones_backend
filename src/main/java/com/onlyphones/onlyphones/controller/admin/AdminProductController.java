@@ -1,12 +1,18 @@
 package com.onlyphones.onlyphones.controller.admin;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onlyphones.onlyphones.entity.Product;
+import com.onlyphones.onlyphones.service.CloudinaryService;
 import com.onlyphones.onlyphones.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.print.attribute.standard.Media;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -16,6 +22,8 @@ import java.util.List;
 
 public class AdminProductController {
 
+    private final ObjectMapper objectMapper;
+    private final CloudinaryService cloudinaryService;
     private final ProductService productService;
 
     @GetMapping("/product")
@@ -41,17 +49,21 @@ public class AdminProductController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/createproduct")
-    public ResponseEntity<?> createProduct(@RequestBody Product product) {
-        try{
+    @PostMapping(value = "/createproduct")
+    public ResponseEntity<?> createProduct(
+            @RequestPart("product") String productJson,
+            @RequestPart("image")MultipartFile image) throws IOException {
+
+        try {
+
+            Product product = objectMapper.readValue(productJson, Product.class);
+            String url = cloudinaryService.uploadFile(image);
+            product.setImage(url);
             Product response = productService.createProduct(product);
 
-            if (response == null) {
-                throw new RuntimeException("No se puede crear el producto");
-            }
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error al intentar crear el producto");
+            return ResponseEntity.status(500).body("Error al crear el producto: " + e.getMessage());
         }
     }
 
@@ -62,6 +74,8 @@ public class AdminProductController {
         if (response == null) {
            return ResponseEntity.noContent().build();
         }
+
+
 
         return ResponseEntity.ok(response);
     }

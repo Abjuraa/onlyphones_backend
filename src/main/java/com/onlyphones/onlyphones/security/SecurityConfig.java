@@ -31,10 +31,9 @@ public class SecurityConfig {
                 }))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests( auth ->{
-                            auth.requestMatchers("api/auth/**", "api/admin/**").permitAll();
-
-                            auth.requestMatchers("api/client/**").hasRole("Client");
-                            auth.anyRequest().authenticated();
+                            auth.requestMatchers("/api/auth/**").permitAll();
+                            auth.requestMatchers("/api/admin/**").permitAll();
+                            auth.anyRequest().permitAll();
                         }
                 );
 
