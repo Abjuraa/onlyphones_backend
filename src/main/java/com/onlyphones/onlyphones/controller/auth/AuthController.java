@@ -1,17 +1,12 @@
 package com.onlyphones.onlyphones.controller.auth;
 
-import com.onlyphones.onlyphones.dto.LoginRequest;
-import com.onlyphones.onlyphones.dto.AuthResponse;
-import com.onlyphones.onlyphones.dto.RegisterRequest;
+import com.onlyphones.onlyphones.dto.*;
 import com.onlyphones.onlyphones.exceptions.AuthException;
 import com.onlyphones.onlyphones.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,6 +33,16 @@ public class AuthController {
             return  ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(403).body(new AuthResponse(null, e.getMessage()));
+        }
+    }
+
+    @PutMapping("/recoverpassword")
+    public ResponseEntity<RecoverPasswordResponse> recoverPassword(@RequestBody RecoverPasswordRequest data) {
+        try {
+            RecoverPasswordResponse response = authService.recoverPassword(data);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new RecoverPasswordResponse(e.getMessage()));
         }
     }
 

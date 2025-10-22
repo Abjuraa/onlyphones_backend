@@ -1,8 +1,6 @@
 package com.onlyphones.onlyphones.service;
 
-import com.onlyphones.onlyphones.dto.LoginRequest;
-import com.onlyphones.onlyphones.dto.AuthResponse;
-import com.onlyphones.onlyphones.dto.RegisterRequest;
+import com.onlyphones.onlyphones.dto.*;
 import com.onlyphones.onlyphones.entity.Rol;
 import com.onlyphones.onlyphones.entity.User;
 import com.onlyphones.onlyphones.exceptions.AuthException;
@@ -54,6 +52,18 @@ public class AuthService {
         String token = jwtUtils.generateToken(newUser.getEmail(), newUser.getUserRol().getRol());
 
         return new AuthResponse(token, "Usuario creado correctamente");
+    }
+
+    public RecoverPasswordResponse recoverPassword(RecoverPasswordRequest data) {
+        User user = userRepository.findByEmail(data.getEmail()).orElseThrow(() -> new RuntimeException("El correo ingresado no existe"));
+        System.out.println(user);
+        if(user != null) {
+            user.setPassword(passwordEncoder.encode(data.getPassword()));
+        }
+
+        userRepository.save(user);
+
+        return new RecoverPasswordResponse("Contraseña editada correctamente");
     }
 
     }

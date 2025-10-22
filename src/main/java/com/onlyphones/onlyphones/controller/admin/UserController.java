@@ -15,8 +15,7 @@ import java.util.List;
 
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @GetMapping("/user")
     public ResponseEntity<?> getAllUsers() {
@@ -52,12 +51,11 @@ public class UserController {
 
     @DeleteMapping("/deleteuser/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable String id) {
-        boolean response = userService.deleteUser(id);
-
-        if (response) {
-            return ResponseEntity.ok(id);
-        }
-
-        return ResponseEntity.notFound().build();
+      try {
+          userService.deleteUser(id);
+          return ResponseEntity.ok("Usuario eliminado correctamente");
+      } catch (Exception e) {
+          return ResponseEntity.status(500).body("No se pudo eliminar el usuario" + e.getMessage());
+      }
     }
 }

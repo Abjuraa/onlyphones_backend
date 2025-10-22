@@ -4,8 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "product")
@@ -46,4 +45,12 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "id_category")
     Category category;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 }

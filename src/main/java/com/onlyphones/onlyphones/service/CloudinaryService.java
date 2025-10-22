@@ -5,7 +5,6 @@ import com.cloudinary.utils.ObjectUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.util.Map;
 
@@ -28,5 +27,13 @@ public class CloudinaryService {
         );
         Map uploadResult = cloudinary.uploader().upload(file.getBytes(), params);
         return uploadResult.get("url").toString();
+    }
+
+    public void deleteFile(String publicId){
+        try {
+            cloudinary.uploader().destroy(publicId, Map.of());
+        } catch (Exception e) {
+            throw new RuntimeException("no se puede eliminar esta foto");
+        }
     }
 }

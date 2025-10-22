@@ -6,7 +6,6 @@ import com.onlyphones.onlyphones.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -15,11 +14,16 @@ import java.util.List;
 
 public class ProductService {
 
+    private final CloudinaryService cloudinaryService;
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
     public List<Product> getProducts() {
         return (List<Product>) productRepository.findAll();
+    }
+
+    public List<Product> getLatestProduct() {
+        return productRepository.findTop10ByOrderByCreatedAtDesc();
     }
 
     public Product getProductById(String id) {
@@ -45,13 +49,36 @@ public class ProductService {
                 .orElseThrow(() -> new RuntimeException("producto no encontrado"));
     }
 
-    public boolean deleteProduct(String id) {
-        if (productRepository.existsById(id)) {
-            productRepository.deleteById(id);
-            return true;
+    public String extractIdPublic (String url) {
+        if (url == null || !url.contains("/upload/")) {
+            return null;
         }
 
-        return false;
+        String[] ulrPart = url.split("/upload/");
+        String path = ulrPart[1];
+
+        if (path.startsWith("v")) {
+            int firstSlash = path.indexOf("/");
+            path = path.substring(firstSlash + 1);
+        }
+
+        return path.substring(0, path.lastIndexOf('.'));
     }
+
+    public void deleteProduct(String id) {
+       Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("el producto ha eliminar no se encontro"));
+
+       if (product.getImage() != null) {
+           String publicId = extractIdPublic(product.getImage());
+
+           if (publicId != null) {
+               cloudinaryService.deleteFile(publicId);
+           }
+       }
+
+       productRepository.delete(product);
+    }
+
+
 
 }

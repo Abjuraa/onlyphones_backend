@@ -43,12 +43,8 @@ public class CategoryService {
                 .orElseThrow(() -> new RuntimeException("error al editar categoria"));
     }
 
-    public Boolean deleteCategory(String id) {
-        if (categoryRepository.existsById(id)) {
-             categoryRepository.deleteById(id);
-            return true;
-        }
-
-        return false;
+    public void deleteCategory(String id) {
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("no se econtro la categoria"));
+        categoryRepository.delete(category);
     }
 }

@@ -60,12 +60,11 @@ public class AdminCategoryController {
 
     @DeleteMapping("/deletecategory/{id}")
     public ResponseEntity<?> deleteCategory(@PathVariable String id) {
-        boolean response = categoryService.deleteCategory(id);
-
-        if(response) {
-            return ResponseEntity.ok(id);
+        try {
+            categoryService.deleteCategory(id);
+            return ResponseEntity.ok("Categoria eliminada correctamente");
+        } catch(Exception e) {
+            return ResponseEntity.status(500).body("Error al eliminar categoria" + e.getMessage());
         }
-        return ResponseEntity.notFound().build();
-
     }
 }

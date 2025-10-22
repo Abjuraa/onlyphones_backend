@@ -44,11 +44,8 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("No se pudo actualizar el usuario"));
     }
 
-    public Boolean deleteUser(String id) {
-        if (userRepository.existsById(id)) {
-            userRepository.deleteById(id);
-            return true;
-        }
-        return false;
+    public void deleteUser(String id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("no se pudo eliminar el usuario"));
+        userRepository.delete(user);
     }
 }

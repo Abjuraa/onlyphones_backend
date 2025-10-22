@@ -38,4 +38,10 @@ public class ClientProductController {
         }
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/product/latest")
+    public ResponseEntity<List<Product>> getLatestProduct() {
+        List<Product> response = productService.getLatestProduct();
+        return ResponseEntity.ok(response);
+    }
 }

@@ -49,7 +49,7 @@ public class AdminProductController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping(value = "/createproduct")
+    @PostMapping("/createproduct")
     public ResponseEntity<?> createProduct(
             @RequestPart("product") String productJson,
             @RequestPart("image")MultipartFile image) throws IOException {
@@ -75,20 +75,16 @@ public class AdminProductController {
            return ResponseEntity.noContent().build();
         }
 
-
-
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/deleteproduct/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable String id) {
-        boolean response = productService.deleteProduct(id);
-
-        if (response) {
-            log.info("producto eliminado corectamente con el id: {}", id);
-            return ResponseEntity.ok(id);
+        try {
+            productService.deleteProduct(id);
+            return ResponseEntity.ok("producto eliminado correctamente");
+        } catch(Exception e){
+            return ResponseEntity.status(500).body("Error al eliminar el producto" + e.getMessage());
         }
-
-        return ResponseEntity.notFound().build();
     }
 }
