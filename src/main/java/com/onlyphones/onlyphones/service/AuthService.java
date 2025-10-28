@@ -31,7 +31,7 @@ public class AuthService {
             throw new AuthException("Credenciales invalidas");
         }
 
-        String token = jwtUtils.generateToken(user.getEmail(), user.getUserRol().getRol());
+        String token = jwtUtils.generateToken(user.getEmail());
         return new AuthResponse(token, "inicio de sesion correcto");
     }
 
@@ -49,7 +49,7 @@ public class AuthService {
 
         userRepository.save(newUser);
 
-        String token = jwtUtils.generateToken(newUser.getEmail(), newUser.getUserRol().getRol());
+        String token = jwtUtils.generateToken(newUser.getEmail());
 
         return new AuthResponse(token, "Usuario creado correctamente");
     }
