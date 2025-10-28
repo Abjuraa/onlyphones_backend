@@ -5,6 +5,10 @@ import com.onlyphones.onlyphones.repository.CategoryRepository;
 import com.onlyphones.onlyphones.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -24,6 +28,11 @@ public class ProductService {
 
     public List<Product> getLatestProduct() {
         return productRepository.findTop10ByOrderByCreatedAtDesc();
+    }
+
+    public Page<Product> pagerProducts(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return productRepository.findAll(pageable);
     }
 
     public Product getProductById(String id) {
