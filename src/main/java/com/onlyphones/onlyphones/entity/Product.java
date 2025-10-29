@@ -1,5 +1,7 @@
 package com.onlyphones.onlyphones.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -44,6 +46,7 @@ public class Product {
 
     @ManyToOne
     @JoinColumn(name = "id_category")
+    @JsonBackReference
     Category category;
 
     @Column(name = "created_at", nullable = false, updatable = false)
