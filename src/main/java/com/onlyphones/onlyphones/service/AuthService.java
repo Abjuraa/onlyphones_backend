@@ -8,7 +8,6 @@ import com.onlyphones.onlyphones.repository.RolRepository;
 import com.onlyphones.onlyphones.repository.UserRepository;
 import com.onlyphones.onlyphones.security.JwtUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +37,7 @@ public class AuthService {
     public AuthResponse register(RegisterRequest request) {
         Rol rol = rolRepository.findByRol("Client").orElseThrow(() -> new RuntimeException("No se encontro el rol"));
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-             throw new RuntimeException("Usuario con correo ya registrado");
+             throw new AuthException("Usuario con correo ya registrado");
         }
 
         User newUser = new User();
@@ -56,7 +55,6 @@ public class AuthService {
 
     public RecoverPasswordResponse recoverPassword(RecoverPasswordRequest data) {
         User user = userRepository.findByEmail(data.getEmail()).orElseThrow(() -> new RuntimeException("El correo ingresado no existe"));
-        System.out.println(user);
         if(user != null) {
             user.setPassword(passwordEncoder.encode(data.getPassword()));
         }

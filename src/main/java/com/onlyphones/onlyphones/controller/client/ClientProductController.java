@@ -1,8 +1,8 @@
 package com.onlyphones.onlyphones.controller.client;
 
+import com.onlyphones.onlyphones.controller.ProductAbstractController;
 import com.onlyphones.onlyphones.entity.Product;
 import com.onlyphones.onlyphones.service.ProductService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,43 +12,28 @@ import java.util.Map;
 
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/client")
 
-public class ClientProductController {
+public class ClientProductController extends ProductAbstractController {
 
-    final String PAGE = "0";
-    final String SIZE = "16";
+    public static final String PAGE_DEFAULT = "0";
+    public static final String SIZE_DEFAULT = "16";
     private final ProductService productService;
 
-    @GetMapping("/product")
-    public ResponseEntity<?> getAllProducts() {
-        List<Product> response = productService.getProducts();
-
-        if (response.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(response);
+    public ClientProductController(ProductService productService, ProductService productService1) {
+        super(productService);
+        this.productService = productService1;
     }
 
-    @GetMapping("/product/{id}")
-    public ResponseEntity<?> getProductById(@PathVariable String id) {
-        Product response = productService.getProductById(id);
-
-        if (response == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(response);
-    }
 
     // product/paginador?page=0&size=16
     @GetMapping("/product/paginador")
-    public ResponseEntity<?> pagerProducts(
-            @RequestParam(defaultValue = PAGE) int page,
-            @RequestParam(defaultValue = SIZE) int size
+    public ResponseEntity<Product> pageProducts(
+            @RequestParam(defaultValue = PAGE_DEFAULT) String page,
+            @RequestParam(defaultValue = SIZE_DEFAULT) String size
     ) {
-        int minSize = Math.min(size, 24);
-        Page<Product> product = productService.pagerProducts(page, minSize);
+        int minSize = Math.min(Integer.getInteger(size), 24);
+        Page<Product> product = productService.pagerProducts(Integer.getInteger(page), minSize);
 
         Map<String, Object> response = new HashMap<>();
         response.put("content", product.getContent());
@@ -57,7 +42,7 @@ public class ClientProductController {
         response.put("totalPages", product.getTotalPages());
         response.put("pageSize", product.getSize());
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok((Product) response);
     }
 
     @GetMapping("/product/latest")

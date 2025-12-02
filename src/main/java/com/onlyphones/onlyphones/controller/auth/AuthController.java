@@ -4,7 +4,6 @@ import com.onlyphones.onlyphones.dto.*;
 import com.onlyphones.onlyphones.exceptions.AuthException;
 import com.onlyphones.onlyphones.service.AuthService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,40 +1,21 @@
 package com.onlyphones.onlyphones.controller.admin;
 
+import com.onlyphones.onlyphones.controller.CategoryAbstractController;
 import com.onlyphones.onlyphones.entity.Category;
 import com.onlyphones.onlyphones.service.CategoryService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/admin")
 
-public class AdminCategoryController {
+public class AdminCategoryController extends CategoryAbstractController {
 
     private final CategoryService categoryService;
 
-    @GetMapping("/category")
-    public ResponseEntity<?> getAllCategories() {
-        List<Category> response = categoryService.getAllCategories();
-
-        if (response.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/category/{id}")
-    public ResponseEntity<?> getCategoryById(@PathVariable String id) {
-        Category response = categoryService.getCategoryById(id);
-
-        if (response == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(response);
+    public AdminCategoryController(CategoryService categoryService, CategoryService categoryService1) {
+        super(categoryService);
+        this.categoryService = categoryService1;
     }
 
     @PostMapping("/createcategory")
@@ -59,7 +40,7 @@ public class AdminCategoryController {
     }
 
     @DeleteMapping("/deletecategory/{id}")
-    public ResponseEntity<?> deleteCategory(@PathVariable String id) {
+    public ResponseEntity<String> deleteCategory(@PathVariable String id) {
         try {
             categoryService.deleteCategory(id);
             return ResponseEntity.ok("Categoria eliminada correctamente");

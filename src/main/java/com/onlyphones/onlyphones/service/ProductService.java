@@ -1,6 +1,5 @@
 package com.onlyphones.onlyphones.service;
 
-import com.onlyphones.onlyphones.entity.Category;
 import com.onlyphones.onlyphones.entity.Product;
 import com.onlyphones.onlyphones.repository.CategoryRepository;
 import com.onlyphones.onlyphones.repository.ProductRepository;
@@ -9,10 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedModel;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +26,7 @@ public class ProductService {
     }
 
     public List<Product> getLatestProduct() {
-        String UUID = "9d4e640b-d50c-4fbd-bfcb-e4a052afb47e";
+        final String UUID = "9d4e640b-d50c-4fbd-bfcb-e4a052afb47e";
         return productRepository.findTop10ByCategory_IdCategoryOrderByCreatedAtDesc(UUID);
     }
 

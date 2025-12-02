@@ -2,6 +2,8 @@ package com.onlyphones.onlyphones.service;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.onlyphones.onlyphones.exceptions.cloudinary_exceptions.CloudinaryCanNotDeleteFile;
+import com.onlyphones.onlyphones.exceptions.cloudinary_exceptions.CloudinaryFileCanNotBeEmptyException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,7 +20,7 @@ public class CloudinaryService {
     public String uploadFile(MultipartFile file) throws IOException {
 
         if (file == null || file.isEmpty()) {
-            throw new RuntimeException("el archivo no puede estar vacio");
+            throw new CloudinaryFileCanNotBeEmptyException("el archivo no puede estar vacio");
         }
 
         Map params = ObjectUtils.asMap(
@@ -33,7 +35,7 @@ public class CloudinaryService {
         try {
             cloudinary.uploader().destroy(publicId, Map.of());
         } catch (Exception e) {
-            throw new RuntimeException("no se puede eliminar esta foto");
+            throw new CloudinaryCanNotDeleteFile("no se puede eliminar esta foto");
         }
     }
 }

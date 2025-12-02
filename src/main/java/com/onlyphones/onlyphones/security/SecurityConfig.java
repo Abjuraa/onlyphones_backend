@@ -40,16 +40,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-    /*@Bean
-    public SecurityFilterChain securityFilterChain (HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity
-                .authorizeHttpRequests( auth -> {
-                    auth.requestMatchers("/product/getallproducts").permitAll();
-                    auth.anyRequest().authenticated();
-                })
-                .build();
-    }*/
-
     @Bean
     public PasswordEncoder passwordEncode() {
         return new BCryptPasswordEncoder();

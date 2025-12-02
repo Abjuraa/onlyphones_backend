@@ -1,18 +1,13 @@
 package com.onlyphones.onlyphones.service;
 
-import com.onlyphones.onlyphones.entity.Rol;
 import com.onlyphones.onlyphones.entity.User;
 import com.onlyphones.onlyphones.repository.RolRepository;
 import com.onlyphones.onlyphones.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -48,4 +43,5 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("no se pudo eliminar el usuario"));
         userRepository.delete(user);
     }
+
 }

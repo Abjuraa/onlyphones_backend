@@ -1,6 +1,8 @@
 package com.onlyphones.onlyphones.service;
 
 import com.onlyphones.onlyphones.entity.Category;
+import com.onlyphones.onlyphones.exceptions.category_exceptions.CategoryAlredyExistException;
+import com.onlyphones.onlyphones.exceptions.category_exceptions.CategoryErrorUpdateException;
 import com.onlyphones.onlyphones.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,7 +29,7 @@ public class CategoryService {
         Optional<Category> existingCategory = categoryRepository.findByNameCategory(newCategory.getNameCategory());
 
         if (existingCategory.isPresent()) {
-            throw new RuntimeException("Categoria ya existente");
+            throw new CategoryAlredyExistException("Categoria ya existente");
         }
         return categoryRepository.save(newCategory);
     }
@@ -40,11 +42,12 @@ public class CategoryService {
                     return existing;
                 })
                 .map(categoryRepository::save)
-                .orElseThrow(() -> new RuntimeException("error al editar categoria"));
+                .orElseThrow(() -> new CategoryErrorUpdateException("error al editar categoria"));
     }
 
     public void deleteCategory(String id) {
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("no se econtro la categoria"));
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("no se econtro la categoria"));
         categoryRepository.delete(category);
     }
 }
