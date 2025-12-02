@@ -54,7 +54,7 @@ public class UserController {
           userService.deleteUser(id);
           return ResponseEntity.ok("Usuario eliminado correctamente");
       } catch (Exception e) {
-          return ResponseEntity.status(500).body("No se pudo eliminar el usuario" + e.getMessage());
+          return ResponseEntity.status(404).body("No se pudo eliminar el usuario" + e.getMessage());
       }
     }
 }

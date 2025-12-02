@@ -17,8 +17,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class UserControllerTest {
@@ -120,6 +119,30 @@ public class UserControllerTest {
                 .andExpect(status().isNoContent());
 
         verify(service).updateUser(eq(id), any(User.class));
+    }
+
+    @Test
+    void DeleteUSer_ReturnOk_WhenUserDelete() throws Exception{
+        String id = "1234";
+        doNothing().when(service).deleteUser(id);
+
+        mockMvc.perform(delete("/api/user/deleteuser/{id}", id))
+                .andExpect(status().isOk());
+
+        verify(service, times(1)).deleteUser(id);
+    }
+
+    @Test
+    void DeleteUser_ReturnNotFound_WhenUserDoesNotExist() throws Exception{
+        String id = "1234";
+
+        doThrow(new RuntimeException("User not found")).when(service).deleteUser(id);
+
+        mockMvc.perform(delete("/api/user/deleteuser/{id}", id))
+                .andExpect(status().isNotFound());
+
+        verify(service).deleteUser(id);
+
     }
 
 }
