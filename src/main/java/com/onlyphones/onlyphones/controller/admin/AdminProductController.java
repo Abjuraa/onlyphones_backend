@@ -43,7 +43,8 @@ public class AdminProductController extends ProductAbstractController {
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.status(500).build();
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
         }
     }
 

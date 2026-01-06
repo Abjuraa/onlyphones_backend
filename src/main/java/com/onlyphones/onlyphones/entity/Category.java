@@ -23,7 +23,7 @@ public class Category {
     @Column(name = "id_category")
     String idCategory;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     String nameCategory;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -24,13 +24,13 @@ public class AuthService {
 
     public AuthResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new AuthException("Credenciales invalidas"));
+                .orElseThrow(() -> new AuthException("Correo electronico inexistente"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new AuthException("Credenciales invalidas");
+            throw new AuthException("La contraseña es incorrecta");
         }
 
-        String token = jwtUtils.generateToken(user.getEmail());
+        String token = jwtUtils.generateToken(user);
         return new AuthResponse(token, "inicio de sesion correcto");
     }
 
@@ -48,7 +48,7 @@ public class AuthService {
 
         userRepository.save(newUser);
 
-        String token = jwtUtils.generateToken(newUser.getEmail());
+        String token = jwtUtils.generateToken(newUser);
 
         return new AuthResponse(token, "Usuario creado correctamente");
     }

@@ -23,18 +23,20 @@ public class JwtUtils {
     private final UserRepository userRepository;
     Logger logger = Logger.getLogger(getClass().getName());
 
-    public String generateToken(String email) {
+    public String generateToken(User user) {
 
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("El correo no se encuentra registrado"));
-        String rol = user.getUserRol().getRol();
+        User userByEmail = userRepository.findByEmail(user.getEmail()).orElseThrow(() -> new RuntimeException("El correo no se encuentra registrado"));
+        String rol = userByEmail.getUserRol().getRol();
         logger.info(key);
 
 
         return Jwts.builder()
                 //a quien se le va a asignar el token
-                .setSubject(email)
+                .setSubject(user.getIdUser().toString())
                 //Tipo de rol o permisos asignados
                 .claim("rol", rol)
+                .claim("email", userByEmail.getEmail())
+                .claim("nombre", user.getName())
                 //fecha de creacion
                 .setIssuedAt(new Date())
                 //fecha de vencimiento

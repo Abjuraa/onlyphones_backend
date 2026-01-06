@@ -8,6 +8,6 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface ProductRepository extends CrudRepository<Product, String> {
-    List<Product> findTop10ByCategory_IdCategoryOrderByCreatedAtDesc(String idCategory);
+    List<Product> findTop10ByOrderByCreatedAtDesc();
     Page<Product> findAll(Pageable pageable);
 }

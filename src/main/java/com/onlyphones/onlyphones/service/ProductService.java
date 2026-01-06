@@ -26,8 +26,7 @@ public class ProductService {
     }
 
     public List<Product> getLatestProduct() {
-        final String UUID = "9d4e640b-d50c-4fbd-bfcb-e4a052afb47e";
-        return productRepository.findTop10ByCategory_IdCategoryOrderByCreatedAtDesc(UUID);
+        return productRepository.findTop10ByOrderByCreatedAtDesc();
     }
 
     public Page<Product> pagerProducts(int page, int size) {
