@@ -2,6 +2,8 @@ package com.onlyphones.onlyphones.security;
 
 import com.onlyphones.onlyphones.entity.User;
 import com.onlyphones.onlyphones.repository.UserRepository;
+import io.jsonwebtoken.Jwt;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +50,7 @@ public class JwtUtils {
 
     }
 
-    public String getToken(String token) {
+    public String getUserId(String token) {
         return Jwts.parserBuilder()
                 //Pasamos la clave secreta
                 .setSigningKey(secretKey)
@@ -60,5 +62,26 @@ public class JwtUtils {
                 .getBody()
                 //obtenemos los datos guardados en el token
                 .getSubject();
+    }
+
+    public String getRole(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("rol", String.class);
+    }
+
+    public Boolean isTokenValid(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
     }
 }

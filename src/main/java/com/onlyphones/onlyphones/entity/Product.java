@@ -34,6 +34,9 @@ public class Product {
     @Column(name = "color")
     String color;
 
+    @Column(name = "units_available")
+    Integer unitsAvailable;
+
     @Column(name = "price")
     BigDecimal price;
 
@@ -42,6 +45,36 @@ public class Product {
 
     @Column(name = "has_discount")
     Boolean hasDiscount;
+
+    @Column(name = "has_available")
+    Boolean hasAvailable;
+
+    @Column(name = "battery_percentage")
+    Integer batteryPercentage;
+
+    @Column(name = "grade")
+    String grade;
+
+    @Column(name = "warranty")
+    Integer warranty;
+
+    @Column(name = "physical_state")
+    String physicalState;
+
+    @Column(name = "history")
+    String history;
+
+    @Column(name = "screen")
+    String screen;
+
+    @Column(name = "processor")
+    String processor;
+
+    @Column(name = "camera")
+    String camera;
+
+    @Column(name = "security")
+    String security;
 
     @ManyToOne
     @JoinColumn(name = "id_category")

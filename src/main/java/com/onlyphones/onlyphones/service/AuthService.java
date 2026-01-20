@@ -35,7 +35,7 @@ public class AuthService {
     }
 
     public AuthResponse register(RegisterRequest request) {
-        Rol rol = rolRepository.findByRol("Client").orElseThrow(() -> new RuntimeException("No se encontro el rol"));
+        Rol rol = rolRepository.findByRol("USER").orElseThrow(() -> new RuntimeException("No se encontro el rol"));
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
              throw new AuthException("Usuario con correo ya registrado");
         }
