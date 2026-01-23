@@ -45,12 +45,25 @@ public class ProductService {
     public Product updateProduct(String id, Product newData) {
         return productRepository.findById(id)
                 .map(existing -> {
-                    existing.setCategory(newData.getCategory());
+                    existing.setModel(newData.getModel());
+                    existing.setImage(newData.getImage());
                     existing.setCapacity(newData.getCapacity());
                     existing.setColor(newData.getColor());
-                    existing.setModel(newData.getModel());
+                    existing.setUnitsAvailable(newData.getUnitsAvailable());
                     existing.setPrice(newData.getPrice());
                     existing.setDiscount(newData.getDiscount());
+                    existing.setHasDiscount(newData.getHasDiscount());
+                    existing.setHasAvailable(newData.getHasAvailable());
+                    existing.setBatteryPercentage(newData.getBatteryPercentage());
+                    existing.setGrade(newData.getGrade());
+                    existing.setWarranty(newData.getWarranty());
+                    existing.setPhysicalState(newData.getPhysicalState());
+                    existing.setHistory(newData.getHistory());
+                    existing.setScreen(newData.getScreen());
+                    existing.setProcessor(newData.getProcessor());
+                    existing.setCamera(newData.getCamera());
+                    existing.setSecurity(newData.getSecurity());
+                    existing.setCategory(newData.getCategory());
                     return existing;
                 })
                 .map(productRepository::save)
