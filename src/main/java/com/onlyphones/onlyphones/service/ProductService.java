@@ -9,7 +9,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +43,12 @@ public class ProductService {
         return productRepository.findById(id).orElse(null);
     }
 
-    public Product createProduct(Product product) {
+    public Product createProductWithImage(Product product, MultipartFile image) {
+        Map upload = cloudinaryService.uploadFileWithMeta(image);
+
+        product.setImage(upload.get("secure_url").toString());
+        product.setImagePublicId(upload.get("public_id").toString());
+
         return productRepository.save(product);
     }
 
@@ -46,7 +56,6 @@ public class ProductService {
         return productRepository.findById(id)
                 .map(existing -> {
                     existing.setModel(newData.getModel());
-                    existing.setImage(newData.getImage());
                     existing.setCapacity(newData.getCapacity());
                     existing.setColor(newData.getColor());
                     existing.setUnitsAvailable(newData.getUnitsAvailable());
@@ -70,31 +79,29 @@ public class ProductService {
                 .orElseThrow(() -> new RuntimeException("producto no encontrado"));
     }
 
-    public String extractIdPublic (String url) {
-        if (url == null || !url.contains("/upload/")) {
-            return null;
+    public Product updateImage (String id, MultipartFile file) {
+
+        Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+
+        if(product.getImagePublicId() != null) {
+            cloudinaryService.deleteFile(product.getImagePublicId());
         }
 
-        String[] ulrPart = url.split("/upload/");
-        String path = ulrPart[1];
+        Map upload = cloudinaryService.uploadFileWithMeta(file);
 
-        if (path.startsWith("v")) {
-            int firstSlash = path.indexOf("/");
-            path = path.substring(firstSlash + 1);
-        }
+        product.setImage(upload.get("secure_url").toString());
+        product.setImagePublicId(upload.get("public_id").toString());
 
-        return path.substring(0, path.lastIndexOf('.'));
+        return productRepository.save(product);
     }
+
 
     public void deleteProduct(String id) {
        Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException("el producto ha eliminar no se encontro"));
 
-       if (product.getImage() != null) {
-           String publicId = extractIdPublic(product.getImage());
-
-           if (publicId != null) {
-               cloudinaryService.deleteFile(publicId);
-           }
+       if (product.getImagePublicId() != null){
+           String url = product.getImagePublicId();
+           cloudinaryService.deleteFile(url);
        }
 
        productRepository.delete(product);

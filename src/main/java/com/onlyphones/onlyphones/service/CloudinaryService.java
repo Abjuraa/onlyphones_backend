@@ -19,16 +19,33 @@ public class CloudinaryService {
 
     public String uploadFile(MultipartFile file) throws IOException {
 
-        if (file == null || file.isEmpty()) {
-            throw new CloudinaryFileCanNotBeEmptyException("el archivo no puede estar vacio");
-        }
+        try{
+            if (file == null || file.isEmpty()) {
+                throw new CloudinaryFileCanNotBeEmptyException("el archivo no puede estar vacio");
+            }
 
-        Map params = ObjectUtils.asMap(
-                "folder", "onlyphones/productos",
-                "resource_type", "auto"
-        );
-        Map uploadResult = cloudinary.uploader().upload(file.getBytes(), params);
-        return uploadResult.get("url").toString();
+            Map params = ObjectUtils.asMap(
+                    "folder", "onlyphones/productos",
+                    "resource_type", "auto"
+            );
+            Map uploadResult = cloudinary.uploader().upload(file.getBytes(), params);
+
+            System.out.println("CLOUDINARY RESPONSE");
+            uploadResult.forEach((k, v) -> System.out.println(k + "=" + v));
+            return uploadResult.get("url").toString();
+        } catch (IOException e) {
+            throw new RuntimeException("error subiendo imagen a Cloudinary", e);
+        }
+    }
+
+    public Map uploadFileWithMeta(MultipartFile file) {
+        try{
+            Map result = cloudinary.uploader().upload(file.getBytes(),
+                    ObjectUtils.asMap("folder", "onlyphones/productos"));
+            return result;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void deleteFile(String publicId){

@@ -60,11 +60,8 @@ public class AdminProductController extends ProductAbstractController {
         try {
 
             Product product = objectMapper.readValue(productJson, Product.class);
-            String url = cloudinaryService.uploadFile(image);
-            product.setImage(url);
-            Product response = productService.createProduct(product);
-
-            return ResponseEntity.ok(response);
+            Product saved = productService.createProductWithImage(product, image);
+            return ResponseEntity.ok(saved);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
@@ -80,6 +77,14 @@ public class AdminProductController extends ProductAbstractController {
         }
 
         return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/product/{id}/image")
+    public Product updateImage(
+            @PathVariable String id,
+            @RequestParam("image") MultipartFile image
+    ) {
+        return productService.updateImage(id, image);
     }
 
     @DeleteMapping("/deleteproduct/{id}")

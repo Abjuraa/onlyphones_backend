@@ -28,6 +28,9 @@ public class Product {
     @Column(name = "image")
     String image;
 
+    @Column(name = "public_image_id")
+    String ImagePublicId;
+
     @Column(name = "capacity")
     String capacity;
 
