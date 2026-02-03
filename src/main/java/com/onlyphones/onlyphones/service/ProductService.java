@@ -27,11 +27,11 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
 
     public List<Product> getProducts() {
-        return (List<Product>) productRepository.findAll();
+        return productRepository.findAllfindAllByHasAvailableIsTrue();
     }
 
     public List<Product> getLatestProduct() {
-        return productRepository.findTop10ByOrderByCreatedAtDesc();
+        return productRepository.findTop10ByHasAvailableIsTrueOrderByCreatedAtDesc();
     }
 
     public Page<Product> pagerProducts(int page, int size) {

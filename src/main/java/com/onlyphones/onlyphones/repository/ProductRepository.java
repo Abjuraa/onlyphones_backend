@@ -8,6 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface ProductRepository extends CrudRepository<Product, String> {
-    List<Product> findTop10ByOrderByCreatedAtDesc();
+    List<Product> findTop10ByHasAvailableIsTrueOrderByCreatedAtDesc();
     Page<Product> findAll(Pageable pageable);
+    List<Product> findAllfindAllByHasAvailableIsTrue();
 }
