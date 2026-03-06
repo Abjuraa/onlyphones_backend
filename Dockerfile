@@ -1,3 +1,12 @@
+# === BUILDTIME ===
+FROM maven:3.9.9-eclipse-temurin-17 AS builder
+WORKDIR /build
+COPY pom.xml .
+RUN mvn -B -q -e -C dependecy:go-offline
+COPY src ./src
+RUN mvn clean package -DskipTests
+
+# === RUNTIME ===
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 COPY target/*.jar app.jar
