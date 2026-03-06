@@ -2,35 +2,41 @@ package com.onlyphones.onlyphones.security;
 
 import com.onlyphones.onlyphones.entity.User;
 import com.onlyphones.onlyphones.repository.UserRepository;
-import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
-import io.github.cdimascio.dotenv.Dotenv;
-import java.util.logging.Logger;
 
 @Component
-@RequiredArgsConstructor
 
 public class JwtUtils {
 
-    Dotenv dotenv = Dotenv.load();
-    final String key = dotenv.get("JWT");
     private static final long EXPIRATION_TIME = 1000L*60*60;
-    private final Key secretKey = Keys.hmacShaKeyFor(key.getBytes());
+    private final Key secretKey;
     private final UserRepository userRepository;
-    Logger logger = Logger.getLogger(getClass().getName());
+
+    public JwtUtils(
+            @Value("${jwt.secret}") String secret,
+            UserRepository userRepository) {
+
+        if (secret == null || secret.length() < 32) {
+            throw new IllegalArgumentException("JWT secret must be at least 32 characters long");
+        }
+
+        this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        this.userRepository = userRepository;
+    }
 
     public String generateToken(User user) {
 
         User userByEmail = userRepository.findByEmail(user.getEmail()).orElseThrow(() -> new RuntimeException("El correo no se encuentra registrado"));
         String rol = userByEmail.getUserRol().getRol();
-        logger.info(key);
-
 
         return Jwts.builder()
                 //a quien se le va a asignar el token
